@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Expr.cs" />
-    <Compile Include="LL.cs" />
     <Compile Include="LR.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

@@ -10,7 +10,8 @@ namespace lb1TA
 {
     public class Expression
     {
-        //Form1 form1 = new Form1();
+        int countLpar = 0;
+        int countRpar = 0;
         List<Token> ExpressionStack = new List<Token>();
         Stack<string> Operations = new Stack<string>();
         Stack<int> Prioritis = new Stack<int>();
@@ -18,8 +19,9 @@ namespace lb1TA
         string output = null;
         Dictionary<string, int> priority = new Dictionary<string, int>() //Список приоритетов для операций
 {
-{"+", 1}, {"-", 1},
-{"*", 2}, {"/", 2}
+{"+", 2}, {"-", 2},
+{"*", 3}, {"/", 3},
+{"(", 0}, {")", 1}
 };
         public void TakeToken(Token token)//Получение из анализатора логического выражения
         {
@@ -29,6 +31,7 @@ namespace lb1TA
         public void Start()//Запуск программы
         {
             Decstra();
+
             PolishNotation();
         }
         private void HighPriority(string operation)//Вспомогательная функция для метода Дейкстры
@@ -61,12 +64,11 @@ namespace lb1TA
             Prioritis.Push(priority[operation]);
         }
 
-        private void Decstra()//Метод Дейкстры
+       private void Decstra()
         {
-            if (ExpressionStack[index].Type == Token.TokenType.VARIABLE || ExpressionStack[index].Type == Token.TokenType.LITERAL)
+            if (ExpressionStack[index].Type == Token.TokenType.LPAR || ExpressionStack[index].Type == Token.TokenType.LITERAL || ExpressionStack[index].Type == Token.TokenType.VARIABLE)
             {
                 Prioritis.Push(0);
-
                 while (index != ExpressionStack.Count())
                 {
                     if (ExpressionStack[index].Type == Token.TokenType.LITERAL || ExpressionStack[index].Type == Token.TokenType.VARIABLE)
@@ -78,8 +80,7 @@ namespace lb1TA
                     {
                         string operation = "+";
 
-                        if ((priority[operation] > Prioritis.Peek()) || Operations.Count() ==
-                        0)
+                        if ((priority[operation] > Prioritis.Peek()) || Operations.Count() == 0)
                         {
                             Operations.Push(ExpressionStack[index].srt);
                             Prioritis.Push(priority[operation]);
@@ -90,11 +91,12 @@ namespace lb1TA
                         }
                         index++;
                     }
+
                     else if (ExpressionStack[index].Type == Token.TokenType.MINUS)
                     {
                         string operation = "-";
-                        if ((priority[operation] > Prioritis.Peek()) || Operations.Count() ==
-                        0)
+
+                        if ((priority[operation] > Prioritis.Peek()) || Operations.Count() == 0)
                         {
                             Operations.Push(ExpressionStack[index].srt);
                             Prioritis.Push(priority[operation]);
@@ -105,11 +107,12 @@ namespace lb1TA
                         }
                         index++;
                     }
+
                     else if (ExpressionStack[index].Type == Token.TokenType.MULTIPLY)
                     {
                         string operation = "*";
-                        if ((priority[operation] > Prioritis.Peek()) || Operations.Count() ==
-                        0)
+
+                        if ((priority[operation] > Prioritis.Peek()) || Operations.Count() == 0)
                         {
                             Operations.Push(ExpressionStack[index].srt);
                             Prioritis.Push(priority[operation]);
@@ -120,12 +123,12 @@ namespace lb1TA
                         }
                         index++;
                     }
+
                     else if (ExpressionStack[index].Type == Token.TokenType.DIVISION)
                     {
                         string operation = "/";
-                        if ((priority[operation] > Prioritis.Peek()) || Operations.Count() ==
-                        0)
 
+                        if ((priority[operation] > Prioritis.Peek()) || Operations.Count() == 0)
                         {
                             Operations.Push(ExpressionStack[index].srt);
                             Prioritis.Push(priority[operation]);
@@ -136,26 +139,51 @@ namespace lb1TA
                         }
                         index++;
                     }
-                    else if (ExpressionStack[index].Type == Token.TokenType.VARIABLE || ExpressionStack[index].Type == Token.TokenType.LITERAL)
+
+                    else if (ExpressionStack[index].Type == Token.TokenType.LPAR)
                     {
-                        Operations.Pop();
-                        Operations.Pop();
-                        Prioritis.Pop();
-                        Prioritis.Pop();
+                        string operation = "(";
+                        countLpar++;
+                        if ((priority[operation] > Prioritis.Peek()) || Operations.Count() == 0)
+                        {
+                            Operations.Push(ExpressionStack[index].srt);
+                            Prioritis.Push(priority[operation]);
+                        }
+                        else
+                        {
+                            Operations.Push(operation);
+                            Prioritis.Push(priority[operation]);
+                        }
+                        index++;
                     }
-                    else
+
+                    else if (ExpressionStack[index].Type == Token.TokenType.RPAR)
                     {
-                        throw new Exception("Неверно составлено  выражение.");
+                        string operation = ")";
+                        countRpar++;
+
+                        if ((priority[operation] > Prioritis.Peek() || Operations.Count() == 0) && countLpar == countRpar)
+                        {
+                            Operations.Push(ExpressionStack[index].srt);
+                            Prioritis.Push(priority[operation]);
+                        }
+                        else
+                        {
+                            HighPriority(operation);
+                            Operations.Pop();
+                            Operations.Pop();
+                            Prioritis.Pop();
+                            Prioritis.Pop();
+                        }
+                        index++;
                     }
                 }
                 int countOperations = Operations.Count();
-                for (int i = 0; i < countOperations; i++)//Выталкивание всех оставшихся операций в стеке
+                for (int i = 0; i < countOperations; i++)
                 {
                     output += Operations.Pop();
                 }
             }
-            else
-                throw new Exception("Неверно составле нологическое выражение.");
         }
         public void PolishNotation()//Метод выполняющий преобразование обратную польскую нотацию в матричный вид
         {
@@ -196,7 +224,6 @@ namespace lb1TA
                             key++;
                             break;
                         }
-
                     default:
                         {
                             if (Regex.IsMatch(currentChar.ToString(), "^[a-zA-Z]+$") || Regex.IsMatch(currentChar.ToString(), "^[0-9]+$"))
@@ -225,12 +252,6 @@ namespace lb1TA
             Form1._Form1.Printt(output);
 
             Form1._Form1.Printt("Матречный вид:");
-            int countOutput = stackOperand.Count;
-            for (int i = 0; i < countOutput; i++)
-            {
-                Form1._Form1.Printt(stackOperand.Pop());
-            }
-            Form1._Form1.Printt(" ");
             int countM = M.Count;
             for (int i = 1; i < countM + 1; i++)
             {

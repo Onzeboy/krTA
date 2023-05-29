@@ -19,7 +19,7 @@ namespace lb1TA
             string subText = "";
             foreach (char s in ss)
             {
-                if (Lexems.IsOperator(subText) && (s == ' ' || s == '<' || s == '>' || s == ';' || s == '+' || s == '-' || s == '*' || s == '/' || s == ',' || s == ':' || s == '.'))
+                if (Lexems.IsOperator(subText) && (s == ' ' ||s == ')'|| s == '<' || s == '>' || s == ';' || s == '+' || s == '-' || s == '*' || s == '/' || s == ',' || s == ':' || s == '.'))
                 {
                     listBuf.Add(subText + " ");
                     forToken.Add("I");
@@ -33,17 +33,24 @@ namespace lb1TA
                     forChar.Add(' ');
                     subText = "";
                 }
-                else if (Lexems.IsSeparator(subText) && (s == ' ' || s == '(' || char.IsDigit(s) || char.IsLetter(s)))
+                else if (Lexems.IsSeparator(subText) && (s == ' ' || s == '(' ||char.IsDigit(s) || char.IsLetter(s)))
                 {
                     listBuf.Add(subText + " ");
                     forToken.Add("R");
                     forChar.Add(' ');
                     subText = "";
                 }
-                else if (Lexems.IsIDVariable(subText) && !Lexems.IsOperator(subText) && (s == ' ' || s == '<' || s == '>' || s == ';' || s == '+' || s == '-' || s == '*' || s == '/' || s == ',' || s == ':' || s == '.'))
+                else if (Lexems.IsIDVariable(subText) && !Lexems.IsOperator(subText) && (s == ')' || s == ' ' || s == '<' || s == '>' || s == ';' || s == '+' || s == '-' || s == '*' || s == '/' || s == ',' || s == ':' || s == '.'))
                 {
                     listBuf.Add(subText + " ");
                     forToken.Add("P");
+                    forChar.Add(' ');
+                    subText = "";
+                }
+                 else if (Lexems.PAR(subText))
+                {
+                    listBuf.Add(subText + " ");
+                    forToken.Add("R");
                     forChar.Add(' ');
                     subText = "";
                 }

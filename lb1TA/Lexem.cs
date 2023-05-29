@@ -15,7 +15,11 @@ namespace lb1TA
 
         public static bool IsSeparator(string text)
         {
-            return text == "<" || text == ">" || text == "," || text == ":" || text == ":=" || text == "==" || text == "=" || text == "+" || text == "-" || text == "*" || text == "/" || text == ";" || text == "(" || text == ")" || text == ".." || text == ".";
+            return text == "<" || text == ">" || text == "," || text == ":" || text == ":=" || text == "==" || text == "=" || text == "+" || text == "-" || text == "*" || text == "/" || text == ";" ||text == ".." || text == ".";
+        }
+         public static bool PAR(string text)
+        {
+            return text == "(" || text == ")";
         }
             public static bool IsLiteral(string text)
         {

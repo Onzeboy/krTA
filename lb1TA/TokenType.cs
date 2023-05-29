@@ -13,7 +13,7 @@ namespace lb1TA
             VAR, INTEGER, DO, LITERAL, NUMBER, IDENTIFIER, BEGIN, END, CASE, OF, ELSE,
             TO, PLUS,
             MINUS, EQUAL, MORE, LESS, TWOEQUAL, SEMICOLON, MULTIPLY, COMMA, DIVISION, POINT, COLON,
-            VARIABLE, DOUBLEPOINT, ASSIGNMENT, DOUBLE, BOOLEAN, NETERM, EXPR, LIT
+            VARIABLE, DOUBLEPOINT, ASSIGNMENT, DOUBLE, BOOLEAN, NETERM, EXPR, LIT, LPAR, RPAR
         }
         public TokenType Type;
         public string Value;
@@ -31,7 +31,7 @@ namespace lb1TA
              TokenType.PLUS, TokenType.MINUS,
              TokenType.EQUAL, TokenType.MORE, TokenType.LESS,
              TokenType.TWOEQUAL, TokenType.SEMICOLON, TokenType.MULTIPLY,
-             TokenType.COMMA,TokenType.DIVISION, TokenType.POINT, TokenType.COLON
+             TokenType.COMMA,TokenType.DIVISION, TokenType.POINT, TokenType.COLON, TokenType.LPAR, TokenType.RPAR
         };
         public static bool IsDelimiter(Token token)
         {
@@ -72,6 +72,8 @@ namespace lb1TA
              { ".", TokenType.POINT },
              { "..", TokenType.DOUBLEPOINT },
              { ";", TokenType.SEMICOLON },
+             { "(", TokenType.LPAR },
+             { ")", TokenType.RPAR },
              };
         public static bool IsSpecialSymbol(string str)
         {

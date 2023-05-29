@@ -99,24 +99,6 @@ namespace lb1TA
             } //rule.Programm();
 
         }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            string[] lines = File.ReadAllLines(textBox3.Text);
-            string ss = string.Join(" ", lines);
-            StringReader reader = new StringReader(textBox1.Text);
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                TokenH.Tokenhnd(line, richTextBox2);
-            }
-            richTextBox2.Text += "======================" + Environment.NewLine + "Классификация лексем завершена" + Environment.NewLine;
-            List<Token> lex;
-            lex = TokenH.Tokenhnd(ss, richTextBox2);
-            LL rule = new LL(lex);
-            rule.Start();
-            MessageBox.Show("Разбор завершён");
-        }
         public static Form1 _Form1;
         public void Printt(string print)
         {
